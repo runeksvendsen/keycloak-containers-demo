@@ -1,0 +1,98 @@
+version: "3.4"
+
+services:
+   keycloak-db:
+      image: postgres:13
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: test
+      restart: always
+      # TODO: create "keycloak" schema ?
+      # volumes:
+      #    - <TODO>
+      networks:
+         - medusa-network
+      ports:
+         - "54322:5432" # NB: for debugging only
+      expose:
+         - "5432"
+   keycloak:
+      image: bitnami/keycloak:12.0.2  # quay.io/keycloak/keycloak:12.0.2
+      # TODO:
+      #     * create realm
+      #     * set realm private key
+      #     * get realm public key ("realm settings" -> "keys")
+      #        * convert: PEM to JWK
+      #     * create client "frontend"
+      #        * access type: "public"
+      #        * set "redirect_uri"
+      #     * create roles: "standard", "admin"
+      #     * create users: 2 users "standard", 1 "admin".
+      #        * remove all "required user actions",
+      #        * go to "credentials" and attribute a new password.
+      #        * "Role Mappings": select your client "frontend" and add a "standard", or "admin" role.
+      environment:
+         # DB_VENDOR: postgres
+         KEYCLOAK_DATABASE_HOST: keycloak-db
+         # DB_SCHEMA: keycloak
+         KEYCLOAK_DATABASE_USER: keycloak
+         KEYCLOAK_DATABASE_PASSWORD: test
+         KEYCLOAK_DATABASE_NAME: keycloak
+         KEYCLOAK_ADMIN_USER: admin
+         KEYCLOAK_ADMIN_PASSWORD: admin
+         KEYCLOAK_HTTP_PORT: 8080
+      networks:
+         - medusa-network
+      volumes: #
+         - keycloak/config/init-scripts/test_script.sh:/docker-entrypoint-initdb.d/1.sh
+   # existing DB for Medusa
+   # schema: https://github.com/medusajs/medusa/tree/master/packages/medusa/src/models
+   medusa-db:
+      image: postgres:13
+      environment:
+        POSTGRES_DB: medusa
+        POSTGRES_USER: test
+        POSTGRES_PASSWORD: test
+      restart: always
+      volumes:
+         - ./database/initial-schema.pgsql:/docker-entrypoint-initdb.d/1-schema.sql
+         - medusa-db-data:/var/lib/postgresql/data/
+      networks:
+         - medusa-network
+      ports:
+         - "54322:5432" # NB: for debugging only
+      expose:
+         - "5432"
+   # postgrest: # pretend this is the Medusa backend
+   #    image: postgrest/postgrest
+   #    ports:
+   #       - "3000:3000"
+   #    links:
+   #       - medusa-db:medusa-db
+   #    environment:
+   #       PGRST_DB_URI: postgres://test:test@medusa-db:5432/medusa
+   #       PGRST_DB_SCHEMA: api
+   #       PGRST_DB_ANON_ROLE: web_anon
+   #       PGRST_SERVER_PROXY_URI: "http://127.0.0.1:3000/"
+   #       PGRST_JWT_SECRET: '{"kty":"RSA","e":"AQAB","kid":"442d692e-cec3-4917-8164-e97ce25a8e7a","n":"wQ8mDGjqlM03MGKm6Tp9gGFmxcE5Cf4Z6UMa1-i_H-UpilX9PVGLG54TP0NaMMgL4u6wpjI7CPVnowmMO0VvNlZLi9WJBGDj7zY_olMcYwubvb6rWBQ1DDnlnHa4g79_C4CVftUXrAHOhi4TrbjtiSX0f39f6WazfB__L8DtwDc2g5lCLazgXZl2oXn4PV1TmxsV9bKI391T_EbQpE2G-M9nM8mqH5Qj1F2GK5xX2S-_8zY11de2mekqRLfGzU3advbIJrj1ZiCWPC7WKI4MTEpcrki9m929ZbHRoKvDv2BQrq1DM3Ryj6YLgETtwxqmdTgyOOHG_8qmK0Nc9zDmLQ"}'
+   #       PGRST_JWT_SECRET_: >-
+   #          '
+   #            { "kty":"RSA"
+   #            , "e":"AQAB"
+   #            , "kid":"442d692e-cec3-4917-8164-e97ce25a8e7a"
+   #            , "n":"wQ8mDGjqlM03MGKm6Tp9gGFmxcE5Cf4Z6UMa1-i_H-UpilX9PVGLG54TP0NaMMgL4u6wpjI7CPVnowmMO0VvNlZLi9WJBGDj7zY_olMcYwubvb6rWBQ1DDnlnHa4g79_C4CVftUXrAHOhi4TrbjtiSX0f39f6WazfB__L8DtwDc2g5lCLazgXZl2oXn4PV1TmxsV9bKI391T_EbQpE2G-M9nM8mqH5Qj1F2GK5xX2S-_8zY11de2mekqRLfGzU3advbIJrj1ZiCWPC7WKI4MTEpcrki9m929ZbHRoKvDv2BQrq1DM3Ryj6YLgETtwxqmdTgyOOHG_8qmK0Nc9zDmLQ"
+   #            }
+   #          '
+   #       PGRST_ROLE_CLAIM_KEY: '.resource_access.frontend.roles[0]'
+   #    depends_on:
+   #       - medusa-db
+
+
+networks:
+   medusa-network:
+      driver: bridge
+
+volumes:
+   keycloak-db-data:
+   medusa-db-data:
