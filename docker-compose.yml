@@ -45,7 +45,7 @@ services:
       networks:
          - medusa-network
       volumes: #
-         - keycloak/config/init-scripts/test_script.sh:/docker-entrypoint-initdb.d/1.sh
+         - ./keycloak/config/init-scripts/test_script.sh:/docker-entrypoint-initdb.d/1.sh
    # existing DB for Medusa
    # schema: https://github.com/medusajs/medusa/tree/master/packages/medusa/src/models
    medusa-db:
