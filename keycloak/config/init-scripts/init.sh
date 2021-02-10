@@ -13,6 +13,7 @@ for i in $(seq 1 $RETRY_COUNT); do
     if [ "$EXIT_STATUS" -eq "0" ]; then
         break
     fi
+    echo "Retrying in $RETRY_DELAY_SECONDS seconds..."
     sleep $RETRY_DELAY_SECONDS
 done
 if [ "$EXIT_STATUS" -neq "0" ]; then

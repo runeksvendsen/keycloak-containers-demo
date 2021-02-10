@@ -48,6 +48,19 @@ services:
       networks:
          - main-network
 
+   keycloak-init:
+      image: appropriate/curl
+      entrypoint:
+         /bin/sh /usr/share/keycloak-init.sh
+      networks:
+         - main-network
+      volumes:
+         - ./keycloak/config/init-scripts/init.sh:/usr/share/keycloak-init.sh
+      links:
+         - keycloak
+      depends_on:
+         - keycloak
+
    # existing DB for Medusa
    # schema: https://github.com/medusajs/medusa/tree/master/packages/medusa/src/models
    medusa-db:
