@@ -51,12 +51,12 @@ services:
    keycloak-init:
       image: appropriate/curl
       entrypoint:
-         /bin/sh /usr/share/keycloak-init.sh
+         /bin/sh ./keycloak-init.sh
       networks:
          - main-network
       volumes:
-         - ./keycloak/config/init-scripts/init.sh:/usr/share/keycloak-init.sh
-         - ./keycloak/config/init-scripts/realm.json:/usr/share/realm.json
+         - ./keycloak/config/init-scripts/init.sh:./keycloak-init.sh
+         - ./keycloak/config/init-scripts/realm.json:./realm.json
       links:
          - keycloak
       depends_on:
