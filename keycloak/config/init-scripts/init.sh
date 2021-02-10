@@ -16,22 +16,25 @@ for i in $(seq 1 $RETRY_COUNT); do
     echo "Failed to connect to Keycloak server. Retrying in $RETRY_DELAY_SECONDS seconds..."
     sleep $RETRY_DELAY_SECONDS
 done
-if [ "$EXIT_STATUS" -neq "0" ]; then
+if [ "$EXIT_STATUS" -ne "0" ]; then
     echo "Failed to connect to Keycloak server"
     exit "$EXIT_STATUS"
 fi
 
 set -e
 
-#### Configure Keycloak ####
+##### Install "jq" dependency #####
+curl -L 'https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64' -o /usr/local/bin/jq
+chmod +x /usr/local/bin/jq
 
+#### Configure Keycloak ####
 CURL_CMD="curl --silent --show-error"
 KEYCLOAK_REALM="master"
 # NB: see docker-compose.yml: "KEYCLOAK_ADMIN_USER", "KEYCLOAK_ADMIN_PASSWORD"
 KEYCLOAK_USER="admin"
 KEYCLOAK_SECRET="admin"
 
-## Obtain access token
+## Obtain Keycloak access token
 ACCESS_TOKEN=$(${CURL_CMD} \
   -X POST \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -53,7 +56,6 @@ ${CURL_CMD} \
   -H "Content-Type: application/json" \
   -d @"${REALM_FILE}" \
   "${KEYCLOAK_URL}/auth/admin/realms"
-
 
 ## Verify realm created
 NEW_REALM_NAME=$(cat realm.json|jq -r .realm)
