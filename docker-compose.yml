@@ -14,9 +14,9 @@ services:
       networks:
          - medusa-network
       ports:
-         - "5430:5430" # NB: for debugging only
+         - "5432:5430" # NB: for debugging only
       expose:
-         - "5430"
+         - "5432"
    keycloak:
       image: bitnami/keycloak:12.0.2  # quay.io/keycloak/keycloak:12.0.2
       # TODO:
@@ -63,9 +63,9 @@ services:
       networks:
          - medusa-network
       ports:
-         - "5431:5431" # NB: for debugging only
+         - "5432:5431" # NB: for debugging only
       expose:
-         - "5431"
+         - "5432"
    # postgrest: # pretend this is the Medusa backend
    #    image: postgrest/postgrest
    #    ports:
