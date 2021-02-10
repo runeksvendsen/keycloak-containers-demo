@@ -1,19 +1,19 @@
 #!/bin/bash
 
-KEYCLOAK_PORT=8080
-KEYCLOAK_URL="http://localhost:$KEYCLOAK_PORT"
+KEYCLOAK_PORT=8080 # see docker-compose: KEYCLOAK_HTTP_PORT
+KEYCLOAK_URL="http://keycloak:$KEYCLOAK_PORT"
 
 # wait until Keycloak is up and running
 RETRY_COUNT=20
 RETRY_DELAY_SECONDS=10
 EXIT_STATUS=1
 for i in $(seq 1 $RETRY_COUNT); do
-    curl --fail --retry-connrefused "$KEYCLOAK_URL"
+    curl --silent --fail --retry-connrefused "$KEYCLOAK_URL"
     EXIT_STATUS=$?
     if [ "$EXIT_STATUS" -eq "0" ]; then
         break
     fi
-    echo "Retrying in $RETRY_DELAY_SECONDS seconds..."
+    echo "Failed to connect to Keycloak server. Retrying in $RETRY_DELAY_SECONDS seconds..."
     sleep $RETRY_DELAY_SECONDS
 done
 if [ "$EXIT_STATUS" -neq "0" ]; then
