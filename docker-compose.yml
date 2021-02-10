@@ -58,7 +58,7 @@ services:
         POSTGRES_PASSWORD: test
       restart: always
       volumes:
-         - ./database/initial-schema.pgsql:/docker-entrypoint-initdb.d/1-schema.sql
+         - ./database/medusa/existing-schema.pgsql:/docker-entrypoint-initdb.d/1-schema.sql
          - medusa-db-data:/var/lib/postgresql/data/
       networks:
          - medusa-network
