@@ -8,7 +8,7 @@ RETRY_COUNT=20
 RETRY_DELAY_SECONDS=10
 EXIT_STATUS=1
 for i in $(seq 1 $RETRY_COUNT); do
-    curl --silent --fail --retry-connrefused "$KEYCLOAK_URL"
+    curl -o /dev/null --silent --fail --retry-connrefused "$KEYCLOAK_URL"
     EXIT_STATUS=$?
     if [ "$EXIT_STATUS" -eq "0" ]; then
         break
