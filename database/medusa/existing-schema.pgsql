@@ -36,9 +36,9 @@ CREATE TABLE public.product (
 	metadata jsonb NULL,
 	collection_id varchar NULL,
 	type_id varchar NULL,
-	CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY (id),
-	CONSTRAINT "FK_49d419fc77d3aed46c835c558ac" FOREIGN KEY (collection_id) REFERENCES product_collection(id),
-	CONSTRAINT "FK_80823b7ae866dc5acae2dac6d2c" FOREIGN KEY (profile_id) REFERENCES shipping_profile(id),
-	CONSTRAINT "FK_e0843930fbb8854fe36ca39dae1" FOREIGN KEY (type_id) REFERENCES product_type(id)
+	CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY (id)
+	-- CONSTRAINT "FK_49d419fc77d3aed46c835c558ac" FOREIGN KEY (collection_id) REFERENCES product_collection(id),
+	-- CONSTRAINT "FK_80823b7ae866dc5acae2dac6d2c" FOREIGN KEY (profile_id) REFERENCES shipping_profile(id),
+	-- CONSTRAINT "FK_e0843930fbb8854fe36ca39dae1" FOREIGN KEY (type_id) REFERENCES product_type(id)
 );
 CREATE UNIQUE INDEX "IDX_db7355f7bd36c547c8a4f539e5" ON public.product USING btree (handle);
