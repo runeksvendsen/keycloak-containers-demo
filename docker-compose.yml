@@ -8,9 +8,6 @@ services:
         POSTGRES_USER: keycloak
         POSTGRES_PASSWORD: test
       restart: always
-      # TODO: create "keycloak" schema ?
-      # volumes:
-      #    - <TODO>
       networks:
          - main-network
       ports:

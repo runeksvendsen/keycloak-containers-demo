@@ -1,0 +1,9 @@
+{
+    "realm":"tenant-12345678",
+    "notBefore":0,
+    "enabled":true,
+    "sslRequired":"all",
+    "bruteForceProtected":true,
+    "failureFactor":10,
+    "eventsEnabled":false
+}
