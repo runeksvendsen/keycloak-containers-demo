@@ -21,6 +21,7 @@ if [ "$EXIT_STATUS" -neq "0" ]; then
     exit "$EXIT_STATUS"
 fi
 
+set -e
 
 #### Configure Keycloak ####
 
