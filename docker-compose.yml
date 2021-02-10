@@ -35,7 +35,7 @@ services:
       environment:
          # DB_VENDOR: postgres
          KEYCLOAK_DATABASE_HOST: keycloak-db
-         KEYCLOAK_DATABASE_PORT: 5430
+         KEYCLOAK_DATABASE_PORT: 5432
          # DB_SCHEMA: keycloak
          KEYCLOAK_DATABASE_USER: keycloak
          KEYCLOAK_DATABASE_PASSWORD: test
@@ -73,7 +73,7 @@ services:
    #    links:
    #       - medusa-db:medusa-db
    #    environment:
-   #       PGRST_DB_URI: postgres://test:test@medusa-db:5431/medusa
+   #       PGRST_DB_URI: postgres://test:test@medusa-db:5432/medusa
    #       PGRST_DB_SCHEMA: api
    #       PGRST_DB_ANON_ROLE: web_anon
    #       PGRST_SERVER_PROXY_URI: "http://127.0.0.1:3000/"
