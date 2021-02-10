@@ -14,9 +14,9 @@ services:
       networks:
          - medusa-network
       ports:
-         - "54322:5432" # NB: for debugging only
+         - "5430:5430" # NB: for debugging only
       expose:
-         - "5432"
+         - "5430"
    keycloak:
       image: bitnami/keycloak:12.0.2  # quay.io/keycloak/keycloak:12.0.2
       # TODO:
@@ -35,6 +35,7 @@ services:
       environment:
          # DB_VENDOR: postgres
          KEYCLOAK_DATABASE_HOST: keycloak-db
+         KEYCLOAK_DATABASE_PORT: 5430
          # DB_SCHEMA: keycloak
          KEYCLOAK_DATABASE_USER: keycloak
          KEYCLOAK_DATABASE_PASSWORD: test
@@ -62,9 +63,9 @@ services:
       networks:
          - medusa-network
       ports:
-         - "54322:5432" # NB: for debugging only
+         - "5431:5431" # NB: for debugging only
       expose:
-         - "5432"
+         - "5431"
    # postgrest: # pretend this is the Medusa backend
    #    image: postgrest/postgrest
    #    ports:
@@ -72,7 +73,7 @@ services:
    #    links:
    #       - medusa-db:medusa-db
    #    environment:
-   #       PGRST_DB_URI: postgres://test:test@medusa-db:5432/medusa
+   #       PGRST_DB_URI: postgres://test:test@medusa-db:5431/medusa
    #       PGRST_DB_SCHEMA: api
    #       PGRST_DB_ANON_ROLE: web_anon
    #       PGRST_SERVER_PROXY_URI: "http://127.0.0.1:3000/"
