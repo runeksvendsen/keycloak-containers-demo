@@ -55,3 +55,4 @@ networks:
 
 volumes:
    keycloak-db-data:
+   medusa-db-data:
