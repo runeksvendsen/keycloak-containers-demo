@@ -11,7 +11,8 @@ services:
         POSTGRES_PASSWORD: test
       restart: always
       volumes:
-         - ./database/medusa/existing-schema.pgsql:/docker-entrypoint-initdb.d/1-schema.sql
+         - ./database/medusa/existing-schema.pgsql:/docker-entrypoint-initdb.d/1.sql
+         - ./database/authorization/access.pgsql:/docker-entrypoint-initdb.d/2.sql
          - medusa-db-data:/var/lib/postgresql/data/
       networks:
          - medusa-network
@@ -28,7 +29,7 @@ services:
          - medusa-db
       environment:
          PGRST_DB_URI: postgres://test:test@medusa-db:5432/medusa
-         PGRST_DB_SCHEMA: api
+         PGRST_DB_SCHEMA: public
          PGRST_DB_ANON_ROLE: web_anon
          PGRST_SERVER_PROXY_URI: "http://127.0.0.1:3000/"
          # PGRST_JWT_SECRET: '{"kty":"RSA","e":"AQAB","kid":"442d692e-cec3-4917-8164-e97ce25a8e7a","n":"wQ8mDGjqlM03MGKm6Tp9gGFmxcE5Cf4Z6UMa1-i_H-UpilX9PVGLG54TP0NaMMgL4u6wpjI7CPVnowmMO0VvNlZLi9WJBGDj7zY_olMcYwubvb6rWBQ1DDnlnHa4g79_C4CVftUXrAHOhi4TrbjtiSX0f39f6WazfB__L8DtwDc2g5lCLazgXZl2oXn4PV1TmxsV9bKI391T_EbQpE2G-M9nM8mqH5Qj1F2GK5xX2S-_8zY11de2mekqRLfGzU3advbIJrj1ZiCWPC7WKI4MTEpcrki9m929ZbHRoKvDv2BQrq1DM3Ryj6YLgETtwxqmdTgyOOHG_8qmK0Nc9zDmLQ"}'
