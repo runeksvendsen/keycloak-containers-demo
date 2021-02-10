@@ -1,6 +1,56 @@
 version: "3.4"
 
 services:
+   keycloak-db:
+      image: postgres:13
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: test
+      restart: always
+      # TODO: create "keycloak" schema ?
+      # volumes:
+      #    - <TODO>
+      networks:
+         - main-network
+      ports:
+         - "5432:5430" # NB: for debugging only
+      expose:
+         - "5432"
+
+   keycloak:
+      image: bitnami/keycloak:12.0.2  # quay.io/keycloak/keycloak:12.0.2
+      # TODO:
+      #     * create realm
+      #     * set realm private key
+      #     * get realm public key ("realm settings" -> "keys")
+      #        * convert: PEM to JWK
+      #     * create client "frontend"
+      #        * access type: "public"
+      #        * set "redirect_uri"
+      #     * create roles: "standard", "admin"
+      #     * create users: 2 users "standard", 1 "admin".
+      #        * remove all "required user actions",
+      #        * go to "credentials" and attribute a new password.
+      #        * "Role Mappings": select your client "frontend" and add a "standard", or "admin" role.
+      links:
+         - keycloak-db:keycloak-db
+      depends_on:
+         - keycloak-db
+      environment:
+         # DB_VENDOR: postgres
+         KEYCLOAK_DATABASE_HOST: keycloak-db
+         KEYCLOAK_DATABASE_PORT: 5432
+         # DB_SCHEMA: keycloak
+         KEYCLOAK_DATABASE_USER: keycloak
+         KEYCLOAK_DATABASE_PASSWORD: test
+         KEYCLOAK_DATABASE_NAME: keycloak
+         KEYCLOAK_ADMIN_USER: admin
+         KEYCLOAK_ADMIN_PASSWORD: admin
+         KEYCLOAK_HTTP_PORT: 8080
+      networks:
+         - main-network
+
    # existing DB for Medusa
    # schema: https://github.com/medusajs/medusa/tree/master/packages/medusa/src/models
    medusa-db:
