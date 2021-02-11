@@ -51,7 +51,7 @@ services:
    keycloak-init:
       build: keycloak/init/.
       entrypoint:
-         /bin/sh -c 'cd /init-scripts; ./keycloak-init.sh keycloak 8080'
+         /bin/sh -c 'cd /init-scripts; ./init.sh keycloak 8080'
       networks:
          - main-network
       volumes:
