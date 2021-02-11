@@ -28,39 +28,53 @@ curl --silent -L 'https://github.com/stedolan/jq/releases/download/jq-1.6/jq-lin
 chmod +x /usr/local/bin/jq
 
 #### Configure Keycloak ####
-CURL_CMD="curl --silent --show-error"
+CURL_CMD_ANON="curl --silent --show-error"
 KEYCLOAK_REALM="master"
 # NB: see docker-compose.yml: "KEYCLOAK_ADMIN_USER", "KEYCLOAK_ADMIN_PASSWORD"
 KEYCLOAK_USER="admin"
 KEYCLOAK_SECRET="admin"
 
 ## Obtain Keycloak access token
-ACCESS_TOKEN=$(${CURL_CMD} \
+echo "Attempting to obtain access token..."
+ACCESS_TOKEN=$(${CURL_CMD_ANON} \
   -X POST \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=${KEYCLOAK_USER}" \
-  -d "password=${KEYCLOAK_SECRET}" \
-  -d "grant_type=password" \
-  -d 'client_id=admin-cli' \
+  --data "username=${KEYCLOAK_USER}" \
+  --data "password=${KEYCLOAK_SECRET}" \
+  --data "grant_type=password" \
+  --data 'client_id=admin-cli' \
   "${KEYCLOAK_URL}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token"|jq -r '.access_token')
 
 ## DEBUG: print access token
 echo -n "[DEBUG] Access token: "
 echo ${ACCESS_TOKEN}
 
+CURL_CMD_AUTH="$CURL_CMD_ANON -H \"Authorization: Bearer ${ACCESS_TOKEN}\""
+CURL_CMD_AUTH_POST="$CURL_CMD_AUTH -X POST -H \"Content-Type: application/json\""
+
 ## Create new realm
-REALM_FILE="realm.json";
-${CURL_CMD} \
-  -X POST \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d @"${REALM_FILE}" \
+echo "Attempting to create new realm..."
+${CURL_CMD_AUTH_POST} \
+  --data @"realm.json" \
   "${KEYCLOAK_URL}/auth/admin/realms"
 
 ## Verify realm created
+echo "Attempting to retrieve newly created realm..."
 NEW_REALM_NAME=$(cat realm.json|jq -r .realm)
-${CURL_CMD} \
+${CURL_CMD_AUTH} \
   -X GET \
   -H "Accept: application/json" \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}"|jq -r .|head
+
+## Import private key for realm
+
+# generate private key for this realm
+PEM_PRIVATE_KEY=$(openssl genrsa 2048)
+NEW_REALM_ID=$(cat realm.json|jq -r .id)
+echo "Attempting to import private key..."
+IMPORT_PRV_KEY_RES=${CURL_CMD_AUTH_POST} \
+  --data '{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'$NEW_REALM_ID'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['$PEM_PRIVATE_KEY'],"certificate":[]}}' \
+  "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components"
+
+echo "Response:"
+echo "$IMPORT_PRV_KEY_RES"

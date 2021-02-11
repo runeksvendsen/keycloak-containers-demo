@@ -16,7 +16,7 @@ services:
          - "5432"
 
    keycloak:
-      image: bitnami/keycloak:12.0.2  # quay.io/keycloak/keycloak:12.0.2
+      image: bitnami/keycloak:12.0.2
       # TODO:
       #     * create realm
       #     * set realm private key
@@ -27,7 +27,7 @@ services:
       #        * set "redirect_uri"
       #     * create roles: "standard", "admin"
       #     * create users: 2 users "standard", 1 "admin".
-      #        * remove all "required user actions",
+      #        * remove all "required user actions",  # TODO: see "requiredActions" in "realm.json"
       #        * go to "credentials" and attribute a new password.
       #        * "Role Mappings": select your client "frontend" and add a "standard", or "admin" role.
       links:
@@ -96,6 +96,7 @@ services:
          PGRST_DB_ANON_ROLE: web_anon
          PGRST_SERVER_PROXY_URI: "http://127.0.0.1:3000/"
          # PGRST_JWT_SECRET: '{"kty":"RSA","e":"AQAB","kid":"442d692e-cec3-4917-8164-e97ce25a8e7a","n":"wQ8mDGjqlM03MGKm6Tp9gGFmxcE5Cf4Z6UMa1-i_H-UpilX9PVGLG54TP0NaMMgL4u6wpjI7CPVnowmMO0VvNlZLi9WJBGDj7zY_olMcYwubvb6rWBQ1DDnlnHa4g79_C4CVftUXrAHOhi4TrbjtiSX0f39f6WazfB__L8DtwDc2g5lCLazgXZl2oXn4PV1TmxsV9bKI391T_EbQpE2G-M9nM8mqH5Qj1F2GK5xX2S-_8zY11de2mekqRLfGzU3advbIJrj1ZiCWPC7WKI4MTEpcrki9m929ZbHRoKvDv2BQrq1DM3Ryj6YLgETtwxqmdTgyOOHG_8qmK0Nc9zDmLQ"}'
+         # LEL: '{ "kid": "GHO7lS7zsYlLNqeS41XEP8hNbtF-ucoYhoCXMJFU9WQ", "kty": "RSA", "alg": "RS256", "use": "sig", "n": "tWRaKYtJwKa5uJEHYupVxl3qiJ3Pd5NYmB_-YU0S9H_T-H-6b_eCQVdIvcH3DFc_HO-6FqSsYwQdjqJoCFPLHsoL5QMf20jaETrAoKmuDzF5Uc9IXxpmHGzqQ-8qqFcwMyeuMedwVkU_nqGSAxv0LJME71Vn9YDgMD4dgRJ538LFcs3TZBLgnCNx6F0H6SCG9XknMh8q6fx2wKKbBRr_ZQiz4txxUrxuC1wt7eVyK5iLFDIbrYyd67JxSkXWq0DTRVF6u3Kx1MXoUCVhBxtD263gSMZdaxVqj6OVJq4IwGUo-iZLezpg5pZYivSszyYVAfqrQ5hoTsGL6_BDy_mFPQ", "e": "AQAB", "x5c": [ "MIICrTCCAZUCBgF3jIdk8DANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA90ZW5hbnQtMTIzNDU2NzgwHhcNMjEwMjEwMTUxODM5WhcNMzEwMjEwMTUyMDE5WjAaMRgwFgYDVQQDDA90ZW5hbnQtMTIzNDU2NzgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC1ZFopi0nAprm4kQdi6lXGXeqInc93k1iYH/5hTRL0f9P4f7pv94JBV0i9wfcMVz8c77oWpKxjBB2OomgIU8seygvlAx/bSNoROsCgqa4PMXlRz0hfGmYcbOpD7yqoVzAzJ64x53BWRT+eoZIDG/QskwTvVWf1gOAwPh2BEnnfwsVyzdNkEuCcI3HoXQfpIIb1eScyHyrp/HbAopsFGv9lCLPi3HFSvG4LXC3t5XIrmIsUMhutjJ3rsnFKRdarQNNFUXq7crHUxehQJWEHG0PbreBIxl1rFWqPo5UmrgjAZSj6Jkt7OmDmlliK9KzPJhUB+qtDmGhOwYvr8EPL+YU9AgMBAAEwDQYJKoZIhvcNAQELBQADggEBADFnOKmdbM/dutPOeVqf1CB+ssxy0S2xQLWqiQ34dUVUqcfCaEPk8zrb8Tw5kOL2knofKFk54qY2cOQeAuKpTWl2sgnAqxtEBo00egNGPrizbLX5r26baBkbwlpRLz5Xe42fswCdUSfqfjpPB2jwDDX8OOpQnyQDE/1RFzDMQZhr0XlLrYZck3EnZTH/ylzIT864mt1XyevMsqOVDIDvDWoitPVFLYgSQmpO3pjA2oDY7rz2s6104/hYmBGVs102QFP221A/wwgLIkxSs0YoeHVls8/n0+nZhBc6dApSTJWyu02UwEWtVORonYBFGFSb229NmxKNZGtFRgWcLhHNkxc=" ], "x5t": "8P_A0z3uvdNUw3jDxS4cBqW18ac", "x5t#S256": "g8L8WTxLJ4LKDo8UaWmxtFQW3j17ZzCZHm3f6R2bGUc" }'
          # PGRST_ROLE_CLAIM_KEY: '.resource_access.frontend.roles[0]'
       networks:
          - medusa-network
