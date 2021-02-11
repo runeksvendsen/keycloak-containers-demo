@@ -53,7 +53,7 @@ services:
    keycloak-init:
       image: appropriate/curl
       entrypoint:
-         /bin/sh /keycloak-init.sh
+         /bin/bash /keycloak-init.sh
       networks:
          - main-network
       volumes:
