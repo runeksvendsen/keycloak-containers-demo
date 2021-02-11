@@ -51,11 +51,11 @@ services:
    keycloak-init:
       build: keycloak/init/.
       entrypoint:
-         /bin/sh /keycloak-init.sh keycloak 8080
+         /bin/sh -c 'cd /init-scripts; ./keycloak-init.sh keycloak 8080'
       networks:
          - main-network
       volumes:
-         - ./keycloak/config/init-scripts/:/
+         - ./keycloak/config/init-scripts:/init-scripts
       links:
          - keycloak
       depends_on:
