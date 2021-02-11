@@ -55,8 +55,7 @@ services:
       networks:
          - main-network
       volumes:
-         - ./keycloak/config/init-scripts/init.sh:/keycloak-init.sh
-         - ./keycloak/config/init-scripts/realm.json:/realm.json
+         - ./keycloak/config/init-scripts/:/
       links:
          - keycloak
       depends_on:
