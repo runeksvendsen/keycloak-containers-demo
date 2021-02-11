@@ -51,7 +51,7 @@ services:
          - main-network
 
    keycloak-init:
-      image: ubuntu:latest
+      build: keycloak/init/.
       entrypoint:
          /bin/sh /keycloak-init.sh
       networks:
