@@ -59,9 +59,6 @@ curl_cmd_post () {
   curl_cmd_auth -X POST -H "Content-Type: application/json" "$@"
 }
 
-CURL_CMD_AUTH=("${CURL_CMD_ANON[@]}" )
-CURL_CMD_AUTH_POST=("${CURL_CMD_AUTH[@]}" )
-
 ## Create new realm
 echo "Attempting to create new realm..."
 curl_cmd_post \
@@ -75,7 +72,7 @@ NEW_REALM_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAM
 
 ## Import private key for realm
 
-# generate private key for this realm
+# generate private key for this realm, replace newline with "\n"
 PEM_PRIVATE_KEY=$(openssl genrsa 2048|awk '{printf "%s\\n", $0}')
 NEW_REALM_ID=$(echo "$NEW_REALM_INFO"|jq -r .id)
 echo "Attempting to import private key..."
