@@ -81,7 +81,7 @@ echo "$NEW_REALM_INFO"
 # generate private key for this realm, replace newline with "\n"
 PEM_PRIVATE_KEY=$(openssl genrsa 2048|awk '{printf "%s\\n", $0}')
 NEW_REALM_ID=$(echo "$NEW_REALM_INFO"|jq -r .id)
-JSON='{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'"${NEW_REALM_ID}"'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['"${PEM_PRIVATE_KEY}"'],"certificate":[]}}'
+JSON='{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'"${NEW_REALM_ID}"'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":["'"${PEM_PRIVATE_KEY}"'"],"certificate":[]}}'
 echo "Attempting to import private key..."
 echo "JSON body:"
 echo "$JSON"
