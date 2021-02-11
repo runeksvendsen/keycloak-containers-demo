@@ -28,7 +28,7 @@ curl --silent -L 'https://github.com/stedolan/jq/releases/download/jq-1.6/jq-lin
 chmod +x /usr/local/bin/jq
 
 #### Configure Keycloak ####
-CURL_CMD_ANON="curl --silent --show-error"
+CURL_CMD_ANON=(--silent --show-error)
 KEYCLOAK_REALM="master"
 # NB: see docker-compose.yml: "KEYCLOAK_ADMIN_USER", "KEYCLOAK_ADMIN_PASSWORD"
 KEYCLOAK_USER="admin"
@@ -36,7 +36,7 @@ KEYCLOAK_SECRET="admin"
 
 ## Obtain Keycloak access token
 echo "Attempting to obtain access token..."
-ACCESS_TOKEN=$(${CURL_CMD_ANON} \
+ACCESS_TOKEN=$(curl "${CURL_CMD_ANON[@]}" \
   -X POST \
   -H "Content-Type: application/x-www-form-urlencoded" \
   --data "username=${KEYCLOAK_USER}" \
@@ -48,9 +48,9 @@ ACCESS_TOKEN=$(${CURL_CMD_ANON} \
 ## DEBUG: print access token
 echo -n "[DEBUG] Access token: "
 echo ${ACCESS_TOKEN}
-
-CURL_CMD_AUTH="${CURL_CMD_ANON} -H \"Authorization: Bearer ${ACCESS_TOKEN}\""
-CURL_CMD_AUTH_POST="${CURL_CMD_AUTH} -X POST -H \"Content-Type: application/json\""
+curl "${CURL_CMD_ANON[@]}"
+CURL_CMD_AUTH=(${CURL_CMD_ANON[@]} -H "Authorization: Bearer ${ACCESS_TOKEN}")
+CURL_CMD_AUTH_POST=(${CURL_CMD_AUTH[@]} -X POST -H "Content-Type: application/json")
 
 ## Create new realm
 echo "Attempting to create new realm..."
