@@ -45,8 +45,7 @@ ACCESS_TOKEN=$(curl --silent --show-error \
   "${KEYCLOAK_URL}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token"|jq -r '.access_token')
 
 ## DEBUG: print access token
-echo -n "[DEBUG] Access token: "
-echo ${ACCESS_TOKEN}
+echo "[DEBUG] Access token: ${ACCESS_TOKEN}"
 
 curl_cmd_auth () {
   curl --silent --show-error -H "Authorization: Bearer ${ACCESS_TOKEN}" "$@"
@@ -77,7 +76,7 @@ NEW_REALM_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAM
 ## Import private key for realm
 
 # generate private key for this realm
-PEM_PRIVATE_KEY=$(openssl genrsa 2048)
+PEM_PRIVATE_KEY=$(openssl genrsa 2048|awk '{printf "%s\\n", $0}')
 NEW_REALM_ID=$(echo "$NEW_REALM_INFO"|jq -r .id)
 echo "Attempting to import private key..."
 IMPORT_PRV_KEY_RES=$(curl_cmd_post \
