@@ -35,10 +35,8 @@ services:
       depends_on:
          - keycloak-db
       environment:
-         # DB_VENDOR: postgres
          KEYCLOAK_DATABASE_HOST: keycloak-db
          KEYCLOAK_DATABASE_PORT: 5432
-         # DB_SCHEMA: keycloak
          KEYCLOAK_DATABASE_USER: keycloak
          KEYCLOAK_DATABASE_PASSWORD: test
          KEYCLOAK_DATABASE_NAME: keycloak
