@@ -81,11 +81,14 @@ echo "$NEW_REALM_INFO"
 # generate private key for this realm, replace newline with "\n"
 PEM_PRIVATE_KEY=$(openssl genrsa 2048|awk '{printf "%s\\n", $0}')
 NEW_REALM_ID=$(echo "$NEW_REALM_INFO"|jq -r .id)
-JSON='{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'"${NEW_REALM_ID}"'","config":{"priority":["101"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":["'"${PEM_PRIVATE_KEY}"'"],"certificate":[]}}'
+KEYSTORE_NAME="imported_keystore"
+JSON='{"name":"'"{$KEYSTORE_NAME}"'","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'"${NEW_REALM_ID}"'","config":{"priority":["101"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":["'"${PEM_PRIVATE_KEY}"'"],"certificate":[]}}'
 echo "Attempting to import private key..."
-IMPORT_PRV_KEY_RES=$(curl_cmd_post \
+curl_cmd_post \
   --data "$JSON" \
-  "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components")
+  "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components"
 
+echo "Attempting to get imported key info..."
+KEYSTORE_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components?name={$KEYSTORE_NAME}")
 echo "Response:"
-echo "$IMPORT_PRV_KEY_RES"
+echo "$KEYSTORE_INFO"
