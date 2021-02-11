@@ -53,7 +53,7 @@ services:
    keycloak-init:
       build: keycloak/init/.
       entrypoint:
-         /bin/sh /keycloak-init.sh
+         /bin/sh /keycloak-init.sh keycloak 8080
       networks:
          - main-network
       volumes:
