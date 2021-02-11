@@ -49,8 +49,8 @@ ACCESS_TOKEN=$(${CURL_CMD_ANON} \
 echo -n "[DEBUG] Access token: "
 echo ${ACCESS_TOKEN}
 
-CURL_CMD_AUTH="$CURL_CMD_ANON -H \"Authorization: Bearer ${ACCESS_TOKEN}\""
-CURL_CMD_AUTH_POST="$CURL_CMD_AUTH -X POST -H \"Content-Type: application/json\""
+CURL_CMD_AUTH="${CURL_CMD_ANON} -H \"Authorization: Bearer ${ACCESS_TOKEN}\""
+CURL_CMD_AUTH_POST="${CURL_CMD_AUTH} -X POST -H \"Content-Type: application/json\""
 
 ## Create new realm
 echo "Attempting to create new realm..."
@@ -73,7 +73,7 @@ PEM_PRIVATE_KEY=$(openssl genrsa 2048)
 NEW_REALM_ID=$(cat realm.json|jq -r .id)
 echo "Attempting to import private key..."
 IMPORT_PRV_KEY_RES=${CURL_CMD_AUTH_POST} \
-  --data '{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'$NEW_REALM_ID'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['$PEM_PRIVATE_KEY'],"certificate":[]}}' \
+  --data '{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'${NEW_REALM_ID}'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['${PEM_PRIVATE_KEY}'],"certificate":[]}}' \
   "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components"
 
 echo "Response:"
