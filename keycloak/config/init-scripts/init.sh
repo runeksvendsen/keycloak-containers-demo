@@ -54,10 +54,9 @@ CURL_CMD_AUTH_POST="${CURL_CMD_AUTH} -X POST -H \"Content-Type: application/json
 
 ## Create new realm
 echo "Attempting to create new realm..."
-TEST_RES=$(${CURL_CMD_AUTH_POST} \
+${CURL_CMD_AUTH_POST} \
   --data @"realm.json" \
-  "${KEYCLOAK_URL}/auth/admin/realms")
-echo "$TEST_RES"
+  "${KEYCLOAK_URL}/auth/admin/realms"
 
 ## Verify realm created
 echo "Attempting to retrieve newly created realm..."
