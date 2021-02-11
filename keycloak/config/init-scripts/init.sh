@@ -68,7 +68,7 @@ curl_cmd_post \
 ## Verify realm created
 echo "Attempting to retrieve newly created realm..."
 NEW_REALM_NAME=$(jq -r .realm < realm.json)
-NEW_REALM_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}"|jq -r .|head)
+NEW_REALM_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}"|jq -r .)
 echo "$NEW_REALM_INFO"
 
 ## Import private key for realm
