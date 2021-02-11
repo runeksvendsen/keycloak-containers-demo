@@ -67,7 +67,7 @@ curl_cmd_post \
 
 ## Verify realm created
 echo "Attempting to retrieve newly created realm..."
-NEW_REALM_NAME=$(cat realm.json|jq -r .realm)
+NEW_REALM_NAME=$(jq -r .realm < realm.json)
 NEW_REALM_INFO=$(curl_cmd_get "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}"|jq -r .|head)
 
 ## Import private key for realm
@@ -77,7 +77,7 @@ PEM_PRIVATE_KEY=$(openssl genrsa 2048|awk '{printf "%s\\n", $0}')
 NEW_REALM_ID=$(echo "$NEW_REALM_INFO"|jq -r .id)
 echo "Attempting to import private key..."
 IMPORT_PRV_KEY_RES=$(curl_cmd_post \
-  --data '{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'${NEW_REALM_ID}'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['${PEM_PRIVATE_KEY}'],"certificate":[]}}' \
+  --data '{"name":"imported_keystore","providerId":"rsa","providerType":"org.keycloak.keys.KeyProvider","parentId":"'"${NEW_REALM_ID}"'","config":{"priority":["100"],"enabled":["true"],"active":["true"],"algorithm":["RS256"],"privateKey":['"${PEM_PRIVATE_KEY}"'],"certificate":[]}}' \
   "${KEYCLOAK_URL}/auth/admin/realms/${NEW_REALM_NAME}/components")
 
 echo "Response:"
